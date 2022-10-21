@@ -1,0 +1,43 @@
+CREATE TABLE Class (
+  ClassID Serial,
+  ClassName Varchar(50),
+  PRIMARY KEY (ClassID)
+);
+
+CREATE TABLE Teacher (
+  TeacherID Serial,
+  TeacherName Varchar(50),
+  PRIMARY KEY (TeacherID)
+);
+
+CREATE TABLE Student (
+  StudentID Serial,
+  StudentName Varchar(50),
+  PRIMARY KEY (StudentID)
+);
+
+CREATE TABLE Student_Class_History (
+  StudentID INT,
+  TeacherID INT,
+  ClassID INT
+);
+
+
+CREATE INDEX PKFK ON  Student_Class_History (StudentID, TeacherID, ClassID);
+
+
+
+INSERT INTO Class(ClassName)
+Select distinct Class from stage_table;
+
+INSERT INTO Teacher(TeacherName)
+Select distinct Teacher from stage_table;
+
+INSERT INTO Student(StudentName)
+Select distinct Student from stage_table;
+
+INSERT INTO Student_Class_History(StudentID, TeacherID, ClassID)
+select StudentID, TeacherID, ClassID from Student s
+join stage_table st on s.StudentName=st.student
+join Teacher t on t.TeacherName=st.teacher
+join Class c on c.ClassName=st.class;
