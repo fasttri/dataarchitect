@@ -1,0 +1,69 @@
+CREATE TABLE Student (
+  student_id Serial,
+  student Varchar(50),
+  PRIMARY KEY (student_id)
+);
+
+INSERT INTO Student(student)
+select distinct student from stg_tbl;
+
+CREATE TABLE Teacher (
+  teacher_id Serial,
+  teacher Varchar(50),
+  PRIMARY KEY (teacher_id)
+);
+
+
+INSERT INTO Teacher(teacher)
+select distinct teacher from stg_tbl;
+
+
+CREATE TABLE Class (
+  class_id Serial,
+  class Varchar(50),
+  PRIMARY KEY (class_id)
+);
+
+INSERT INTO Class(class)
+select distinct class from stg_tbl;
+
+
+CREATE TABLE Grade_mapping (
+  class_id INT,
+  grade Varchar(3),
+  grade_lvl INT
+);
+
+INSERT INTO Grade_mapping(class_id, grade, grade_lvl)
+select distinct class_id, grade, grade_lvl from Class c 
+join stg_tbl s on c.class=s.class;
+
+
+
+CREATE TABLE level_history (
+  class_id INT,
+  student_id INT,
+  teacher_id INT,
+  grade Varchar(3)
+);
+
+
+INSERT INTO level_history(class_id, student_id , teacher_id , grade)
+select distinct class_id, student_id , teacher_id , grade from Class c 
+join stg_tbl st on c.class=st.class
+join Student s on st.student=s.student
+join Teacher t on t.teacher=st.teacher;
+
+select grade_lvl, count(distinct student_id) from Grade_mapping gm
+join level_history c on c.class_id=gm.class_id and c.grade=gm.grade
+group by grade_lvl;
+
+select grade, student from level_history lh
+join student s on s.student_id=lh.student_id;
+
+select student from Student s
+join level_history lh on  s.student_id=lh.student_id
+join Class c on c.class_id=lh.class_id
+where class='History';
+
+
