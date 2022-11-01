@@ -1,3 +1,5 @@
+--DDL
+
 CREATE TABLE CITY (
   CITY_ID SERIAL PRIMARY KEY,
   STATE VARCHAR(5),
@@ -68,3 +70,7 @@ JOIN EMPLOYEE M ON P.MANAGER=M.EMP_NM
 JOIN SALARY S ON S.EMP_ID=P.EMP_ID AND S.SALARY=P.SALARY
 JOIN ADDRESS A ON A.ADDRESS=P.ADDRESS;
 ;
+
+
+--CRUD
+select emp_id, job_title, department from employee_history where end_dt>current_date;
