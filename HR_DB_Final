@@ -73,7 +73,7 @@ SELECT DISTINCT department_nm FROM PROJ_STG;
 
 CREATE TABLE EMPLOYEE_HISTORY (
   EMP_ID VARCHAR(10) REFERENCES EMPLOYEE(EMP_ID),
-  JOB_ID INT REFERENCES JOBS(JOB_ID),                                                                                                                                                                                                                                                                                                                                                                                                  INT,
+  JOB_ID INT REFERENCES JOBS(JOB_ID),                                                                                                                                                                                                                                                                                                                                                                                               
   DEPARTMENT_ID INT REFERENCES DEPARTMENTS(DEPARTMENT_ID),
   MANAGER_ID VARCHAR(10),
   START_DT DATE,
@@ -94,5 +94,39 @@ JOIN DEPARTMENTS D on D.DEPARTMENT=P.DEPARTMENT_NM
 ;
 
 
---CRUD
-select emp_id, job_title, department from employee_history where end_dt>current_date;
+--CRUD 1
+select EH.emp_id, J.job_title, D.department from employee_history EH
+JOIN JOBS ON J.JOB_ID=EH.JOB_ID
+JOIN DEPARTMENTS D ON D.DEPARTMENT_ID=EH.DEPARTMENT_ID
+where end_dt>current_date;
+
+--CRUD 2
+INSERT INTO JOBS (JOB_TITLE)
+VALUES ('Web Programmer ');
+SELECT * FROM JOBS;
+
+--CRUD 3
+UPDATE JOBS SET JOB_TITLE = 'Web Developer' WHERE JOB_TITLE = 'Web Programmer ';
+SELECT * FROM JOBS;
+
+--CRUD 4
+delete JOBS WHERE JOB_TITLE = 'Web Programmer ';
+SELECT * FROM JOBS;
+
+--CRUD 5
+select COUNT(EH.emp_id) AS EMPLOYEE_COUNT, D.department from employee_history EH
+JOIN DEPARTMENTS D ON D.DEPARTMENT_ID=EH.DEPARTMENT_ID
+where end_dt>current_date
+GROUP BY D.department;
+
+--CRUD 6
+SELECT DISTINCT e.emp_nm, j.job_title, d.deparment, M.EMP_NM AS MANAGER_NAME, EH.start_dt, eh.end_dt FROM from employee_history EH
+JOIN EMPLOYEE E on e.emp_id=eh.emp_id
+JOIN JOBS ON J.JOB_ID=EH.JOB_ID
+JOIN DEPARTMENTS D ON D.DEPARTMENT_ID=EH.DEPARTMENT_ID
+JOIN employee_history MH ON M.EMP_ID=EH.MANAGER_ID
+JOIN EMPLOYEE M ON MH.EMP_ID=M.EMP_ID
+where e.emp_nm='Toni Lembeck';
+
+
+
