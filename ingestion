@@ -1,0 +1,45 @@
+snowsql -a aw45636.eu-north-1.aws -u fasttri
+
+use WAREHOUSE PC_DBT_WH;
+use database udacityproject;
+use schema staging;
+
+create or replace file format myjsonformat type='JSON' strip_outer_array=true;
+create or replace stage my_json_stage file_format = myjsonformat;
+
+
+
+create table yelp_academic_dataset_covid_features(userjson variant);
+put file://C:\Users\37128\Downloads\yelp_dataset\yelp_academic_dataset_covid_features.json @my_json_stage auto_compress=true;
+copy into yelp_academic_dataset_covid_features from @my_json_stage/yelp_academic_dataset_covid_features.json file_format=myjsonformat on_error='skip_file';
+--loaded
+
+create table yelp_academic_dataset_tip(userjson variant);
+put file://C:\Users\37128\Downloads\yelp_dataset\yelp_academic_dataset_tip.json @my_json_stage auto_compress=true;
+copy into yelp_academic_dataset_tip from @my_json_stage/yelp_academic_dataset_tip.json file_format=myjsonformat on_error='skip_file';
+--loaded
+
+
+create table yelp_academic_dataset_business(userjson variant);
+put file://C:\Users\37128\Downloads\yelp_dataset\yelp_academic_dataset_business.json @my_json_stage auto_compress=true;
+copy into yelp_academic_dataset_business from @my_json_stage/yelp_academic_dataset_business.json file_format=myjsonformat on_error='skip_file';
+--loaded
+
+
+create table yelp_academic_dataset_checkin(userjson variant);
+put file://C:\Users\37128\Downloads\yelp_dataset\yelp_academic_dataset_checkin.json @my_json_stage auto_compress=true;
+copy into yelp_academic_dataset_checkin from @my_json_stage/yelp_academic_dataset_checkin.json file_format=myjsonformat on_error='skip_file';
+--loaded
+
+create table yelp_academic_dataset_review(userjson variant);
+put file://C:\Users\37128\Downloads\yelp_dataset\yelp_academic_dataset_review.json @my_json_stage auto_compress=true;
+copy into yelp_academic_dataset_review from @my_json_stage/yelp_academic_dataset_review.json file_format=myjsonformat on_error='skip_file';
+--not loaded
+
+
+
+create table yelp_academic_dataset_user(userjson variant);
+put file://C:\Users\37128\Downloads\yelp_dataset\yelp_academic_dataset_user.json @my_json_stage auto_compress=true;
+copy into yelp_academic_dataset_user from @my_json_stage/yelp_academic_dataset_user.json file_format=myjsonformat on_error='skip_file';
+--not loaded
+
