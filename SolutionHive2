@@ -1,0 +1,57 @@
+wget https://video.udacity-data.com/topher/2020/November/5fabec84_game-reviews.tsv/game-reviews.tsv.gz --no-check-certificate
+set hive.cli.print.header=true;
+set hive.exec.dynamic.partition.mode=nonstric;
+Create Database demodb;
+CREATE EXTERNAL TABLE demodb.game_reviews (
+    marketplace string,    
+    customer_id    string, 
+    review_id string,    
+    product_id string,    
+    product_parent string,    
+    product_title string,    
+    product_category string, 
+    star_rating    string,
+    helpful_votes string,
+    total_votes    string,
+    vine string,
+    verified_purchase string,
+    review_headline    string,
+    review_body    string,
+    review_date string)
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LOCATION '/game_reviews/'
+    tblproperties ("skip.header.line.count"="1");
+    hdfs dfs -put game_reviews.tsv.gz /game_reviews/
+    
+    
+    CREATE EXTERNAL TABLE demodb.game_reviews_partitioned (
+    marketplace string,    
+    customer_id    string, 
+    review_id string,    
+    product_id string,    
+    product_parent string,    
+    product_title string,    
+    product_category string, 
+    star_rating    string,
+    helpful_votes string,
+    total_votes    string,
+    vine string,
+    verified_purchase string,
+    review_headline    string,
+    review_body    string,
+    review_date string)
+    PARTITIONED BY (year string)
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LOCATION '/game_reviews_partitioned/';
+    
+    INSERT OVERWRITE TABLE demodb.game_rating_partitioned PARTITION (year) SELECT *, year(review_date) FROM demodb.game_reviews;
+    
+    hdfs dfs -ls /game_reviews_partitioned/
+    
+    hive> drop table demodb.game_rating_partitioned;
+hive> drop table demodb.game_rating;
+
+hdfs shell > hdfs dfs -rm -r /game_reviews_partitioned/
+hdfs shell > hdfs dfs -rm -r /game_reviews/ 
