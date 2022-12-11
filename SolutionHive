@@ -1,0 +1,22 @@
+# Download sample file
+wget https://video.udacity-data.com/topher/2020/October/5f8f4412_bx-csv-data/bx-csv-data.zip
+
+# Unzip
+unzip bx-csv-data.zip
+
+# list and validate
+ls
+set hive.cli.print.header=true;
+
+CREATE DATABASE IF NOT EXISTS book_db;
+
+CREATE EXTERNAL TABLE IF NOT EXISTS book_db.bx_users (userid string, location_name string, age int) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' STORED AS TEXTFILE LOCATION '/bx-users/' TBLPROPERTIES ("skip.header.line.count"="1");
+
+CREATE EXTERNAL TABLE IF NOT EXISTS book_db.bx_books (isbn String,title String,author String,year_of_publication String, publisher String,image_url_s String,image_url_m String,image_url_l String) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'  STORED AS TEXTFILE LOCATION '/bx-books/' TBLPROPERTIES ("skip.header.line.count"="1");
+
+CREATE EXTERNAL TABLE IF NOT EXISTS book_db.bx_book_ratings (userid String, isbn String, book_rating String) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' STORED AS TEXTFILE LOCATION '/bx-book-ratings/' TBLPROPERTIES ("skip.header.line.count"="1");
+
+hdfs dfs -put BX-Books.csv /bx-books/
+hdfs dfs -put BX-Users.csv /bx-users/
+hdfs dfs -put BX-Book-Rating /bx-book-rating/
+
