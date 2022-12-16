@@ -31,3 +31,30 @@ select
     precipitation_normal * 2.54 as PRECIPATION_NORMAL_CM
 from
     UDACITYPROJECT.STAGING.USW00023169_LAS_VEGAS_MCCARRAN_INTL_AP_PRECIPITATION_INCH;
+
+
+create
+or replace table udacityproject.ods.Temperature (
+    `DATE` NUMBER(38, 0),
+    `min` FLOAT,
+    `min_c` FLOAT,
+    `max` FLOAT,
+    `max_c` FLOAT,
+    `normal_min` FLOAT,
+    `normal_min_c` FLOAT,
+    `normal_max` FLOAT,
+    `normal_max_c` FLOAT,
+    PRIMARY KEY (`DATE`)
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    date,
+    min,
+    (min -32) / 1.8 as min_c,
+    max,
+    (max -32) / 1.8 as max_c,
+    normal_min,
+    (normal_min -32) / 1.8 as normal_min_c,
+    normal_max,
+    (normal_max -32) / 1.8 as normal_max_c
+from
+    UDACITYPROJECT.STAGING.USW00023169_TEMPERATURE_DEGREEF;
