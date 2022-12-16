@@ -1,0 +1,64 @@
+create
+or replace table UDACITYPROJECT.DWH.User clone UDACITYPROJECT.ODS.user;
+create
+or replace table UDACITYPROJECT.DWH.Business clone UDACITYPROJECT.ODS.Business;
+create
+or replace TABLE UDACITYPROJECT.DWH.Review (
+    business_id VARCHAR(16777216),
+    cool NUMBER(38, 0),
+    date VARCHAR(16777216),
+    funny NUMBER(38, 0),
+    review_id VARCHAR(16777216),
+    stars NUMBER(38, 0),
+    text VARCHAR(16777216),
+    useful NUMBER(38, 0),
+    user_id VARCHAR(16777216),
+    datekey NUMBER(38, 0),
+    Precipitation_CM FLOAT,
+    Precipitation_NORMAL_CM FLOAT,
+    Temperature_min_c FLOAT,
+    Temperature_max_c FLOAT,
+    Temperature_normal_min_c FLOAT,
+    Temperature_normal_max_c FLOAT,
+    PRIMARY KEY (review_id)
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    r.*,
+    p.precipitation_cm,
+    p.precipitation_normal_cm,
+    t.min_c,
+    t.max_c,
+    t.NORMAL_MIN_C,
+    t.NORMAL_MAX_C
+from
+    UDACITYPROJECT.ODS.review r
+    left join UDACITYPROJECT.ODS.TEMPERATURE t on t.date = r.datekey
+    left join UDACITYPROJECT.ODS.PRECIPITATION p on p.date = r.datekey;
+CREATE
+    OR REPLACE TABLE UDACITYPROJECT.DWH.Tip (
+        business_id VARCHAR(16777216),
+        compliment_count NUMBER(38, 0),
+        date VARCHAR(16777216),
+        datekey NUMBER(38, 0),
+        text VARCHAR(16777216),
+        user_id VARCHAR(16777216),
+        Precipitation_CM FLOAT,
+        Precipitation_NORMAL_CM FLOAT,
+        Temperature_min_c FLOAT,
+        Temperature_max_c FLOAT,
+        Temperature_normal_min_c FLOAT,
+        Temperature_normal_max_c FLOAT,
+        PRIMARY KEY (business_id, date)
+    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    b.*,
+    p.precipitation_cm,
+    p.precipitation_normal_cm,
+    t.min_c,
+    t.max_c,
+    t.NORMAL_MIN_C,
+    t.NORMAL_MAX_C
+from
+    UDACITYPROJECT.ODS.tip b
+    left join UDACITYPROJECT.ODS.TEMPERATURE t on t.date = b.datekey
+    left join UDACITYPROJECT.ODS.PRECIPITATION p on p.date = b.datekey;
