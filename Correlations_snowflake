@@ -1,0 +1,2 @@
+select business_id, precipitation_cm, temperature_min_c, temperature_max_c, stars from UDACITYPROJECT.DWH.REVIEW;
+select corr(precipitation_cm, stars), corr(stars, temperature_min_c), corr(stars, temperature_max_c)  from UDACITYPROJECT.DWH.REVIEW;
