@@ -111,3 +111,56 @@ select
     ) as datekey
 from
     UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_REVIEW;
+
+
+create
+or replace table udacityproject.ods.User (
+    `average_stars` FLOAT,
+    `compliment_cool` NUMBER(38, 0),
+    `compliment_cute` NUMBER(38, 0),
+    `compliment_funny` NUMBER(38, 0),
+    `compliment_hot` NUMBER(38, 0),
+    `compliment_list` NUMBER(38, 0),
+    `compliment_more` NUMBER(38, 0),
+    `compliment_note` NUMBER(38, 0),
+    `compliment_photos` NUMBER(38, 0),
+    `compliment_plain` NUMBER(38, 0),
+    `compliment_profile` NUMBER(38, 0),
+    `compliment_writer` NUMBER(38, 0),
+    `cool` NUMBER(38, 0),
+    `elite` VARCHAR(16777216),
+    `fans` NUMBER(38, 0),
+    `friends` VARCHAR(16777216),
+    `funny` NUMBER(38, 0),
+    `name` VARCHAR(16777216),
+    `review_count` NUMBER(38, 0),
+    `useful` NUMBER(38, 0),
+    `user_id` VARCHAR(16777216),
+    `yelping_since` VARCHAR(16777216),
+    PRIMARY KEY (`user_id`)
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    userjson: average_stars,
+    userjson: compliment_cool,
+    userjson: compliment_cute,
+    userjson: compliment_funny,
+    userjson: compliment_hot,
+    userjson: compliment_list,
+    userjson: compliment_more,
+    userjson: compliment_note,
+    userjson: compliment_photos,
+    userjson: compliment_plain,
+    userjson: compliment_profile,
+    userjson: compliment_writer,
+    userjson: cool,
+    userjson: elite,
+    userjson: fans,
+    userjson: friends,
+    userjson: funny,
+    userjson: name,
+    userjson: review_count,
+    userjson: useful,
+    userjson: user_id,
+    userjson: yelping_since
+from
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_USER;
