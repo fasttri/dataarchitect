@@ -81,3 +81,33 @@ SELECT
     userjson:user_id
 FROM
     UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_TIP;
+    
+create
+or replace table udacityproject.ods.review (
+    `business_id` VARCHAR(16777216),
+    `cool` NUMBER(38, 0),
+    `date` VARCHAR(16777216),
+    `funny` NUMBER(38, 0),
+    `review_id` VARCHAR(16777216),
+    `stars` NUMBER(38, 0),
+    `text` VARCHAR(16777216),
+    `useful` NUMBER(38, 0),
+    `user_id` VARCHAR(16777216),
+    `datekey` NUMBER(38, 0),
+    PRIMARY KEY (`business_id`)
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    userjson:business_id,
+    userjson:cool,
+    userjson:date,
+    userjson:funny,
+    userjson:review_id,
+    userjson:stars,
+    userjson:text,
+    userjson:useful,
+    userjson:user_id,
+    to_number(
+        substr(userjson:date, 1, 4) || substr(userjson:date, 6, 2) || substr(userjson:date, 9, 2)
+    ) as datekey
+from
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_REVIEW;
