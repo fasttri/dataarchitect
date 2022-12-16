@@ -190,3 +190,41 @@ SELECT
     userjson:"highlights"
 FROM
     UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_COVID_FEATURES;
+
+
+CREATE TABLE UDACITYPROJECT.ODS.BUSINESS (
+    `address` VARCHAR(16777216),
+    `attributes` VARCHAR(16777216),
+    `ByAppointmentOnly` VARCHAR(16777216),
+    `business_id` VARCHAR(16777216),
+    `categories` VARCHAR(16777216),
+    `city` VARCHAR(16777216),
+    `hours` VARCHAR(16777216),
+    `is_open` NUMBER(38, 0),
+    `latitude` VARCHAR(16777216),
+    `longitude` VARCHAR(16777216),
+    `name` VARCHAR(16777216),
+    `postal_code` VARCHAR(16777216),
+    `review_count` NUMBER(38, 0),
+    `stars` FLOAT,
+    `state` VARCHAR(16777216),
+    PRIMARY KEY (`business_id`)
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+SELECT
+    userjson:address,
+    userjson:attributes,
+    userjson:ByAppointmentOnly,
+    userjson:business_id,
+    userjson:categories,
+    userjson:city,
+    userjson:hours,
+    userjson:is_open,
+    userjson:latitude,
+    userjson:longitude,
+    userjson:name,
+    userjson:postal_code,
+    userjson:review_count,
+    userjson:stars,
+    userjson:state
+FROM
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_BUSINESS;
