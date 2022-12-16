@@ -164,3 +164,29 @@ select
     userjson: yelping_since
 from
     UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_USER;
+    
+    
+CREATE TABLE UDACITYPROJECT.ODS.COVID_FEATURES (
+    "Call To Action enabled" VARCHAR(16777216),
+    "Covid Banner" VARCHAR(16777216),
+    "Grubhub enabled" VARCHAR(16777216),
+    "Request a Quote Enabled" VARCHAR(16777216),
+    "Temporary Closed Until" VARCHAR(16777216),
+    "Virtual Services Offered" VARCHAR(16777216),
+    "business_id" VARCHAR(16777216),
+    "delivery or takeout" VARCHAR(16777216),
+    "highlights" VARCHAR(16777216),
+    PRIMARY KEY ("business_id")
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+SELECT
+    userjson:"Call To Action enabled",
+    userjson:"Covid Banner",
+    userjson:"Grubhub enabled",
+    userjson:"Request a Quote Enabled",
+    userjson:"Temporary Closed Until",
+    userjson:"Virtual Services Offered",
+    userjson:"business_id",
+    userjson:"delivery or takeout",
+    userjson:"highlights"
+FROM
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_COVID_FEATURES;
