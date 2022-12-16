@@ -1,0 +1,33 @@
+create
+or replace table udacityproject.ods.Precipitation (
+    `DATE` NUMBER(38, 0),
+    `Precipitation_INCH` FLOAT,
+    `Precipitation_CM` FLOAT,
+    `Precipitation_NORMAL` FLOAT,
+    `Precipitation_NORMAL_CM` FLOAT,
+    PRIMARY KEY (`DATE`)
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    date,
+    TO_decimal(
+        case
+            when precipitation = 'T' then '0.00'
+            else precipitation
+        end,
+        '9.99',
+        9,
+        5
+    ) as Precipitation_INCH,
+    TO_decimal(
+        case
+            when precipitation = 'T' then '0.00'
+            else precipitation
+        end,
+        '9.99',
+        9,
+        5
+    ) * 2.54 as Precipitation_CM,
+    Precipitation_NORMAL,
+    precipitation_normal * 2.54 as PRECIPATION_NORMAL_CM
+from
+    UDACITYPROJECT.STAGING.USW00023169_LAS_VEGAS_MCCARRAN_INTL_AP_PRECIPITATION_INCH;
