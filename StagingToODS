@@ -228,3 +228,16 @@ SELECT
     userjson:state
 FROM
     UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_BUSINESS;
+
+
+create
+or replace table udacityproject.ods.CHECKIN (
+    `business_id` VARCHAR(16777216),
+    `date` VARCHAR(16777216),
+    PRIMARY KEY (`business_id`)
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+SELECT
+    userjson:business_id,
+    userjson:date
+FROM
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_CHECKIN;
