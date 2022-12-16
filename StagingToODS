@@ -58,3 +58,26 @@ select
     (normal_max -32) / 1.8 as normal_max_c
 from
     UDACITYPROJECT.STAGING.USW00023169_TEMPERATURE_DEGREEF;
+    
+   
+create
+or replace table udacityproject.ods.tip (
+    `business_id` VARCHAR(16777216),
+    `compliment_count` NUMBER(38, 0),
+    `date` VARCHAR(16777216),
+    `datekey` NUMBER(38, 0),
+    `text` VARCHAR(16777216),
+    `user_id` VARCHAR(16777216),
+    PRIMARY KEY (`business_id`, `date`)
+) DATA_RETENTION_TIME_IN_DAYS = 30 as
+SELECT
+    userjson:business_id,
+    userjson:compliment_count,
+    userjson:date,
+    to_number(
+        substr(userjson:date, 1, 4) || substr(userjson:date, 6, 2) || substr(userjson:date, 9, 2)
+    ) as datekey,
+    userjson:text,
+    userjson:user_id
+FROM
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_TIP;
