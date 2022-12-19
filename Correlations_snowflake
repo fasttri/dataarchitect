@@ -1,2 +1,12 @@
-select business_id, precipitation_cm, temperature_min_c, temperature_max_c, stars from UDACITYPROJECT.DWH.REVIEW;
-select corr(precipitation_cm, stars), corr(stars, temperature_min_c), corr(stars, temperature_max_c)  from UDACITYPROJECT.DWH.REVIEW;
+select business_id, w.precipitation_cm, w.temperature_min_c, w.temperature_max_c, stars from UDACITYPROJECT.DWH.REVIEW R
+left join UDACITYPROJECT.DWH.WEATHER W on W.DATEKEY=R.DATEKEY
+--left join UDACITYPROJECT.DWH.BUSINESS B on B.business_id=r.business_id
+--left join udacityproject.dwh.user u on u.user_id=r.user_id
+
+select corr(precipitation_cm, stars), corr(stars, temperature_min_c), corr(stars, temperature_max_c) from UDACITYPROJECT.DWH.REVIEW R
+left join UDACITYPROJECT.DWH.WEATHER W on W.DATEKEY=R.DATEKEY
+
+
+
+
+
