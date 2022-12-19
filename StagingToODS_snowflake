@@ -1,12 +1,61 @@
-create
-or replace table udacityproject.ods.Precipitation (
-    DATE NUMBER(38, 0),
-    Precipitation_INCH FLOAT,
-    Precipitation_CM FLOAT,
-    Precipitation_NORMAL FLOAT,
-    Precipitation_NORMAL_CM FLOAT,
-    PRIMARY KEY (DATE)
+CREATE
+or replace table UDACITYPROJECT.ODS.BUSINESS (
+    address VARCHAR(16777216),
+    attributes VARCHAR(16777216),
+    ByAppointmentOnly VARCHAR(16777216),
+    business_id VARCHAR(16777216),
+    categories VARCHAR(16777216),
+    city VARCHAR(16777216),
+    hours VARCHAR(16777216),
+    is_open NUMBER(38, 0),
+    latitude VARCHAR(16777216),
+    longitude VARCHAR(16777216),
+    name VARCHAR(16777216),
+    postal_code VARCHAR(16777216),
+    review_count NUMBER(38, 0),
+    stars FLOAT,
+    state VARCHAR(16777216),
+    PRIMARY KEY (business_id)
 ) DATA_RETENTION_TIME_IN_DAYS = 30 as
+SELECT
+    userjson:address,
+    userjson:attributes,
+    userjson:ByAppointmentOnly,
+    userjson:business_id,
+    userjson:categories,
+    userjson:city,
+    userjson:hours,
+    userjson:is_open,
+    userjson:latitude,
+    userjson:longitude,
+    userjson:name,
+    userjson:postal_code,
+    userjson:review_count,
+    userjson:stars,
+    userjson:state
+FROM
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_BUSINESS;
+create
+    or replace table udacityproject.ods.CHECKIN (
+        business_id VARCHAR(16777216),
+        date VARCHAR(16777216),
+        PRIMARY KEY (business_id),
+        foreign key (business_id) references BUSINESS(business_id)
+    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
+SELECT
+    userjson:business_id,
+    userjson:date
+FROM
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_CHECKIN;
+create
+    or replace table udacityproject.ods.Precipitation (
+        DATE NUMBER(38, 0),
+        Precipitation_INCH FLOAT,
+        Precipitation_CM FLOAT,
+        Precipitation_NORMAL FLOAT,
+        Precipitation_NORMAL_CM FLOAT,
+        PRIMARY KEY (DATE)
+    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
 select
     date,
     TO_decimal(
@@ -56,56 +105,32 @@ select
     (normal_max -32) / 1.8 as normal_max_c
 from
     UDACITYPROJECT.STAGING.USW00023169_TEMPERATURE_DEGREEF;
-create
-    or replace table udacityproject.ods.tip (
-        business_id VARCHAR(16777216),
-        compliment_count NUMBER(38, 0),
-        date VARCHAR(16777216),
-        datekey NUMBER(38, 0),
-        text VARCHAR(16777216),
-        user_id VARCHAR(16777216),
-        PRIMARY KEY (business_id, date)
+CREATE
+    or replace table UDACITYPROJECT.ODS.COVID_FEATURES (
+        "Call To Action enabled" VARCHAR(16777216),
+        "Covid Banner" VARCHAR(16777216),
+        "Grubhub enabled" VARCHAR(16777216),
+        "Request a Quote Enabled" VARCHAR(16777216),
+        "Temporary Closed Until" VARCHAR(16777216),
+        "Virtual Services Offered" VARCHAR(16777216),
+        "business_id" VARCHAR(16777216),
+        "delivery or takeout" VARCHAR(16777216),
+        "highlights" VARCHAR(16777216),
+        PRIMARY KEY ("business_id"),
+        foreign key ("business_id") references BUSINESS(business_id)
     ) DATA_RETENTION_TIME_IN_DAYS = 30 as
 SELECT
-    userjson:business_id,
-    userjson:compliment_count,
-    userjson:date,
-    to_number(
-        substr(userjson:date, 1, 4) || substr(userjson:date, 6, 2) || substr(userjson:date, 9, 2)
-    ) as datekey,
-    userjson:text,
-    userjson:user_id
+    userjson:"Call To Action enabled",
+    userjson:"Covid Banner",
+    userjson:"Grubhub enabled",
+    userjson:"Request a Quote Enabled",
+    userjson:"Temporary Closed Until",
+    userjson:"Virtual Services Offered",
+    userjson:"business_id",
+    userjson:"delivery or takeout",
+    userjson:"highlights"
 FROM
-    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_TIP;
-create
-    or replace table udacityproject.ods.review (
-        business_id VARCHAR(16777216),
-        cool NUMBER(38, 0),
-        date VARCHAR(16777216),
-        funny NUMBER(38, 0),
-        review_id VARCHAR(16777216),
-        stars NUMBER(38, 0),
-        text VARCHAR(16777216),
-        useful NUMBER(38, 0),
-        user_id VARCHAR(16777216),
-        datekey NUMBER(38, 0),
-        PRIMARY KEY (review_id)
-    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
-select
-    userjson:business_id,
-    userjson:cool,
-    userjson:date,
-    userjson:funny,
-    userjson:review_id,
-    userjson:stars,
-    userjson:text,
-    userjson:useful,
-    userjson:user_id,
-    to_number(
-        substr(userjson:date, 1, 4) || substr(userjson:date, 6, 2) || substr(userjson:date, 9, 2)
-    ) as datekey
-from
-    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_REVIEW;
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_COVID_FEATURES;
 create
     or replace table udacityproject.ods.User (
         average_stars FLOAT,
@@ -157,76 +182,61 @@ select
     userjson: yelping_since
 from
     UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_USER;
-CREATE
-    or replace table UDACITYPROJECT.ODS.COVID_FEATURES (
-        "Call To Action enabled" VARCHAR(16777216),
-        "Covid Banner" VARCHAR(16777216),
-        "Grubhub enabled" VARCHAR(16777216),
-        "Request a Quote Enabled" VARCHAR(16777216),
-        "Temporary Closed Until" VARCHAR(16777216),
-        "Virtual Services Offered" VARCHAR(16777216),
-        "business_id" VARCHAR(16777216),
-        "delivery or takeout" VARCHAR(16777216),
-        "highlights" VARCHAR(16777216),
-        PRIMARY KEY ("business_id")
-    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
-SELECT
-    userjson:"Call To Action enabled",
-    userjson:"Covid Banner",
-    userjson:"Grubhub enabled",
-    userjson:"Request a Quote Enabled",
-    userjson:"Temporary Closed Until",
-    userjson:"Virtual Services Offered",
-    userjson:"business_id",
-    userjson:"delivery or takeout",
-    userjson:"highlights"
-FROM
-    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_COVID_FEATURES;
-CREATE
-    or replace table UDACITYPROJECT.ODS.BUSINESS (
-        address VARCHAR(16777216),
-        attributes VARCHAR(16777216),
-        ByAppointmentOnly VARCHAR(16777216),
-        business_id VARCHAR(16777216),
-        categories VARCHAR(16777216),
-        city VARCHAR(16777216),
-        hours VARCHAR(16777216),
-        is_open NUMBER(38, 0),
-        latitude VARCHAR(16777216),
-        longitude VARCHAR(16777216),
-        name VARCHAR(16777216),
-        postal_code VARCHAR(16777216),
-        review_count NUMBER(38, 0),
-        stars FLOAT,
-        state VARCHAR(16777216),
-        PRIMARY KEY (business_id)
-    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
-SELECT
-    userjson:address,
-    userjson:attributes,
-    userjson:ByAppointmentOnly,
-    userjson:business_id,
-    userjson:categories,
-    userjson:city,
-    userjson:hours,
-    userjson:is_open,
-    userjson:latitude,
-    userjson:longitude,
-    userjson:name,
-    userjson:postal_code,
-    userjson:review_count,
-    userjson:stars,
-    userjson:state
-FROM
-    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_BUSINESS;
 create
-    or replace table udacityproject.ods.CHECKIN (
+    or replace table udacityproject.ods.tip (
         business_id VARCHAR(16777216),
+        compliment_count NUMBER(38, 0),
         date VARCHAR(16777216),
-        PRIMARY KEY (business_id)
+        datekey NUMBER(38, 0),
+        text VARCHAR(16777216),
+        user_id VARCHAR(16777216),
+        PRIMARY KEY (business_id, date),
+        foreign key (user_id) references User(user_id),
+        foreign key (datekey) references Temperature(date),
+        foreign key (datekey) references Precipitation(date),
+        foreign key (business_id) references BUSINESS(business_id)
     ) DATA_RETENTION_TIME_IN_DAYS = 30 as
 SELECT
     userjson:business_id,
-    userjson:date
+    userjson:compliment_count,
+    userjson:date,
+    to_number(
+        substr(userjson:date, 1, 4) || substr(userjson:date, 6, 2) || substr(userjson:date, 9, 2)
+    ) as datekey,
+    userjson:text,
+    userjson:user_id
 FROM
-    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_CHECKIN;
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_TIP;
+create
+    or replace table udacityproject.ods.review (
+        business_id VARCHAR(16777216),
+        cool NUMBER(38, 0),
+        date VARCHAR(16777216),
+        funny NUMBER(38, 0),
+        review_id VARCHAR(16777216),
+        stars NUMBER(38, 0),
+        text VARCHAR(16777216),
+        useful NUMBER(38, 0),
+        user_id VARCHAR(16777216),
+        datekey NUMBER(38, 0),
+        PRIMARY KEY (review_id),
+        foreign key (user_id) references User(user_id),
+        foreign key (datekey) references Temperature(date),
+        foreign key (datekey) references Precipitation(date),
+        foreign key (business_id) references BUSINESS(business_id)
+    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    userjson:business_id,
+    userjson:cool,
+    userjson:date,
+    userjson:funny,
+    userjson:review_id,
+    userjson:stars,
+    userjson:text,
+    userjson:useful,
+    userjson:user_id,
+    to_number(
+        substr(userjson:date, 1, 4) || substr(userjson:date, 6, 2) || substr(userjson:date, 9, 2)
+    ) as datekey
+from
+    UDACITYPROJECT.STAGING.YELP_ACADEMIC_DATASET_REVIEW;
