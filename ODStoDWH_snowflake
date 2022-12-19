@@ -25,16 +25,39 @@ from
     UDACITYPROJECT.ODS.TEMPERATURE t full
     join UDACITYPROJECT.ODS.PRECIPITATION p on p.date = t.date;
 create
-    or replace table UDACITYPROJECT.DWH.Review clone UDACITYPROJECT.ODS.Review;
-ALTER TABLE
-    UDACITYPROJECT.DWH.Review
-ADD
-    FOREIGN KEY (datekey) REFERENCES UDACITYPROJECT.DWH.Weather(datekey);
-ALTER TABLE
-    UDACITYPROJECT.DWH.Review
-ADD
-    FOREIGN KEY (user_id) REFERENCES UDACITYPROJECT.DWH.User(user_id);
-ALTER TABLE
-    UDACITYPROJECT.DWH.Review
-ADD
-    FOREIGN KEY (business_id) REFERENCES UDACITYPROJECT.DWH.BUSINESS(business_id);
+    or replace TABLE UDACITYPROJECT.DWH.REVIEW (
+        cool NUMBER(38, 0),
+        funny NUMBER(38, 0),
+        review_id VARCHAR(16777216),
+        stars NUMBER(38, 0),
+        text VARCHAR(16777216),
+        useful NUMBER(38, 0),
+        PRIMARY KEY (review_id)
+    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    cool,
+    funny,
+    review_id,
+    stars,
+    text,
+    useful
+from
+    UDACITYPROJECT.ODS.review;
+CREATE
+    OR REPLACE TABLE ReviewMapping (
+        business_id VARCHAR(16777216),
+        review_id VARCHAR(16777216),
+        user_id VARCHAR(16777216),
+        datekey NUMBER(38, 0),
+        FOREIGN KEY (datekey) REFERENCES UDACITYPROJECT.DWH.Weather(datekey),
+        FOREIGN KEY (user_id) REFERENCES UDACITYPROJECT.DWH.User(user_id),
+        FOREIGN KEY (business_id) REFERENCES UDACITYPROJECT.DWH.BUSINESS(business_id),
+        PRIMARY KEY (business_id, review_id, user_id, datekey)
+    ) DATA_RETENTION_TIME_IN_DAYS = 30 as
+select
+    business_id,
+    review_id,
+    user_id,
+    datekey
+from
+    UDACITYPROJECT.ODS.review;
