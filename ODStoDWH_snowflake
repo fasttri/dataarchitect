@@ -44,7 +44,7 @@ select
 from
     UDACITYPROJECT.ODS.review;
 CREATE
-    OR REPLACE TABLE ReviewMapping (
+    OR REPLACE TABLE UDACITYPROJECT.DWH.ReviewMapping (
         business_id VARCHAR(16777216),
         review_id VARCHAR(16777216),
         user_id VARCHAR(16777216),
